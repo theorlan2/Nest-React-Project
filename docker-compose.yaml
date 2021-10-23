@@ -1,0 +1,65 @@
+version: '3.4'
+services:
+  dev:
+    container_name: reign_api_dev
+    image: reign-api-dev:1.0.0
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+      #command: npm run start:dev
+    ports:
+      - 3000:3000
+      - 3001:9229
+    networks:
+      - reign-network
+    depends_on:
+      - mongodb
+      - client
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+  client:
+    container_name: reign_client
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    ports:
+      - 8081:8081
+    volumes:
+      - ./client/src:/app/client/src/
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    volumes:
+      - ./database:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - reign-network
+    restart: always
+
+  
+  prod:
+    container_name: reign_api_prod
+    image: reign-api-prod:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    #command: npm run start:prod
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - reign-network
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+networks:
+  reign-network:
+    driver: bridge

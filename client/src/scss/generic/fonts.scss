@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;900&display=swap');
+
+$body-font-family: 'Roboto', sans-serif;
+$title-font: 'Roboto';
+body {
+    font-family: $body-font-family, sans-serif !important; 
+}
+// Sizes 
+$fontTitle : 18px;
+$fontTitleWeight : bold;
+
+$fontBigParagraph : 18px;
+$fontBigParagraphWeight : 300;
+
+$fontParagraphTitle : 13px;
+$fontParagraphTitleWeight : bold;
+
+$fontParagraph : 13px;
+$fontParagraphWeight : 300;
+
+$fontParagraphMediumWeight : 600;
+
+$fontSmallParagraph : 10px;
+$fontSmallParagraphWeight : 400;
+
+
+.fz-title {
+ font-size: $fontTitle;
+ font-weight: $fontTitleWeight;
+}
+
+.fz-b-paragraph {
+ font-size: $fontBigParagraph;
+ font-weight: $fontBigParagraphWeight;
+}
+
+.fz-paragraph {
+ font-size: $fontParagraph;
+ font-weight: $fontParagraphWeight;
+}
+
+.fz-m-paragraph {
+ font-size: $fontParagraph;
+ font-weight: $fontParagraphMediumWeight;
+}
+
+.fz-paragraph-title {
+ font-size: $fontParagraphTitle;
+ font-weight: $fontParagraphTitleWeight;
+}
+
+.fz-s-paragraph {
+ font-size: $fontSmallParagraph;
+ font-weight: $fontSmallParagraphWeight;
+}

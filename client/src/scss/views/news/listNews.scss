@@ -1,0 +1,31 @@
+.cont-list-news {
+    position: relative;
+    float: left;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+@media all and (max-width: 480px) {
+    .cont-list-news {
+        .list-element-news {
+            flex-wrap: wrap;
+            .cont-title {
+                justify-content: inherit;
+                flex-basis: 100%;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            .cont-time,.cont-actions {
+                    flex-basis: 50%;
+            }
+            .cont-actions {
+                opacity: 1;
+                .btn {
+                    background-color: #f98383;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
