@@ -1,53 +1,50 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { AxiosResponse } from 'axios';
 import { Model } from 'mongoose';
 import { firstValueFrom } from 'rxjs';
-import { CreateNewsItemDto } from '../dto/create-news.dto';
+import { CreateNewsItemDto } from '../dtos/create-news.dto';
 import { NewsItemStatusEnum } from '../enums/news-status.enum';
 import {
   HistsNewsExternal,
-  NewsExternal,
+  NewsExternal
 } from '../interfaces/news-externals.interface';
-import { NewsItem as News, NewsDocument } from '../shemas/news.shema';
+import { NewsItem } from '../shemas/newsItem.shema';
 
 @Injectable()
-export class NewsService implements OnModuleInit  {
+export class NewsService  {
   constructor(
-    @InjectModel(News.name) private newsModel: Model<NewsDocument>,
+    @InjectModel(NewsItem.name)
+    private newsItemModel: Model<NewsItem>,
     private httpService: HttpService,
   ) {}
 
-  onModuleInit() {
-    console.log(`The module has been initialized.`);
-    this.fetchData();
-  }
 
-  async create(createNewsDto: CreateNewsItemDto): Promise<News> {
-    const createdNews = new this.newsModel(createNewsDto);
+  async create(createNewsDto: CreateNewsItemDto): Promise<NewsItem> {
+    const createdNews = new this.newsItemModel(createNewsDto);
     return createdNews.save();
   }
 
-  async createMany(createNewsDto: CreateNewsItemDto[]): Promise<News[]> {
-    const createManyNews = await this.newsModel.insertMany(createNewsDto);
+  async createMany(createNewsDto: CreateNewsItemDto[]): Promise<NewsItem[]> {
+    const createManyNews = await this.newsItemModel.insertMany(createNewsDto);
     return createManyNews;
   }
 
   findAll() {
-    return this.newsModel
+    return this.newsItemModel
       .find({ status: NewsItemStatusEnum.ENABLE })
       .sort({ created_at: -1 })
       .exec();
   }
 
   findOne(id: string) {
-    const findNews = this.newsModel.findById(id);
+    const findNews = this.newsItemModel.findById(id);
     return findNews;
   }
 
-  findLastItemByDate(callback: (item: NewsDocument) => void) {
-    this.newsModel
+  findLastItemByDate(callback: (item: NewsItem) => void) {
+    this.newsItemModel
       .findOne({}, {}, { sort: { created_at: -1 } }, function (err, post) {
         if (callback && typeof callback == 'function') {
           callback(post);
@@ -57,8 +54,8 @@ export class NewsService implements OnModuleInit  {
   }
 
   async fetchData() {
-    let lastPost = {} as NewsDocument;
-    this.findLastItemByDate((post: NewsDocument) => {
+    let lastPost = {} as NewsItem;
+    this.findLastItemByDate((post: NewsItem) => {
       lastPost = post;
     });
 
@@ -73,13 +70,13 @@ export class NewsService implements OnModuleInit  {
     result && result?.data && result?.data?.hits.map(async (item: NewsExternal) => {
       const data = new CreateNewsItemDto(item);
       if ((lastPost && item.created_at > lastPost.created_at) || !lastPost) {
-        await this.newsModel.create(data);
+        await this.newsItemModel.create(data);
       }
     });
   }
 
   async remove(id: string) {
-    await this.newsModel.updateOne(
+    await this.newsItemModel.updateOne(
       { _id: id },
       { status: NewsItemStatusEnum.DISABLED },
     );
