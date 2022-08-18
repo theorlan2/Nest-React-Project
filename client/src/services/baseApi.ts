@@ -45,7 +45,7 @@ function executeRequest(
   return new Promise<any>((resolve, reject) => {
     return baseFetch(pathname, reqObj as any)
       .then((res) => {
-        resolve(res.json());
+        res.json().then(r => resolve(r)).catch(e => console.log('Error on server response: ',e));
       })
       .catch((err) => {
         const errorResponse = getBaseErrorResponse(
@@ -90,3 +90,5 @@ export function getBaseErrorResponse(
     detailMessage,
   };
 }
+
+ 

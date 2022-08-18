@@ -7,8 +7,7 @@ import isYesterday from 'dayjs/plugin/isYesterday';
 import Container from '../components/layout/Container';
 import ListElementNew from "../components/news/ListElementNew";
 import { IRootState } from "../store/createReducers";
-import { initData, removeItem } from "../store/post/actions";
-import { PostStatusEnum } from "../infrastructure/enums/post";
+import { initData, removeItem } from "../store/post/actions"; 
 import { RequestStatusEnum } from "../infrastructure/enums/generics";
 
 
@@ -48,7 +47,7 @@ const NewsView: FunctionComponent<Props> = (props) => {
   }
 
   function isValidTitle(str?: string): boolean {
-    return str == '' || str == undefined;
+    return str === '' || str === undefined;
   }
 
   return (
@@ -63,13 +62,13 @@ const NewsView: FunctionComponent<Props> = (props) => {
         <div className="cont-list-news">
           {Array.isArray(props.posts) && props.posts.map((item: any, indexItem) => !isValidTitle(item.title) ? <ListElementNew key={indexItem + '-list-element-new'} title={item.title} time={showDate(item.created_at)} author={item.author} id={item._id} url="aa" onRemove={(id: string) => props.removeNewsItem(id)} /> : undefined)}
 
-          {props.postsStatus == RequestStatusEnum.LOADING && <div className="cont-loading" >
+          {props.postsStatus === RequestStatusEnum.LOADING && <div className="cont-loading" >
             <p>Loading data....</p></div>}
 
-          {props.postsStatus == RequestStatusEnum.LOADING && <div className="cont-loading" >
+          {props.postsStatus === RequestStatusEnum.LOADING && <div className="cont-loading" >
             <p>There is no data on the server yet....</p></div>}
 
-          {props.postsStatus == RequestStatusEnum.ERROR && <div className="cont-error" >
+          {props.postsStatus === RequestStatusEnum.ERROR && <div className="cont-error" >
             <p>An error has occurred on the server....</p></div>}
 
         </div>

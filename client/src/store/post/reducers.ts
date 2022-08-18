@@ -45,7 +45,7 @@ const postsReducer = (state = INITIAL_STATE, action: AnyAction) => {
     case PostsTypes.DELETE_POST:
       return {
         ...state,
-        posts: state.posts.filter((item) => item._id != action.payload),
+        posts: state.posts.filter((item) => item._id !== action.payload),
         errorResponse: {},
         postsStatus: RequestStatusEnum.SUCCESS,
       };

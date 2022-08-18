@@ -15,13 +15,14 @@ function* initPostsData(action: { payload: any }): Generator<any> {
 
 function* removePostItem(action: { payload: string }): Generator<any> {
   try {
-    const response = yield call(
+    yield call(
       API.delete as any,
       "/news/" + action.payload,
       {}
     );
        yield put(registerActions.succesNews());
   } catch (e: any) {
+    console.log('error-',e);
     yield put(registerActions.errorOnGetNews(e.message));
   }
 }
