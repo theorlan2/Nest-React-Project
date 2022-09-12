@@ -1,18 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import './scss/index.scss'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 //
+import './scss/index.scss'
 import App from './routes';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
+const queryClient = new QueryClient();
+
 ReactDOM.render(
-  <Provider store={store}>
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-  </Provider>,
+  <QueryClientProvider client={queryClient}>
+    <Provider store={store}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Provider>
+  </QueryClientProvider>,
   document.getElementById('root')
 );
 

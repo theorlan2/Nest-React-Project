@@ -13,12 +13,12 @@ import {
 import { NewsItem } from '../shemas/newsItem.shema';
 
 @Injectable()
-export class NewsService  {
+export class NewsService {
   constructor(
     @InjectModel(NewsItem.name)
     private newsItemModel: Model<NewsItem>,
     private httpService: HttpService,
-  ) {}
+  ) { }
 
 
   async create(createNewsDto: CreateNewsItemDto): Promise<NewsItem> {
@@ -50,7 +50,7 @@ export class NewsService  {
           callback(post);
         }
       })
-      .catch((_err) => {});
+      .catch((_err) => { });
   }
 
   async fetchData() {
@@ -61,10 +61,10 @@ export class NewsService  {
 
     const result = (await firstValueFrom(
       this.httpService.get(
-        'https://hn.algolia.com/api/v1/search_by_date?query=nodejs',
+        process.env.HOST_NEWS,
       ),
     ).catch((err) => {
-      console.log('Error on request',err.response.status, err.response.statusText)
+      console.log('Error on request', err.response.status, err.response.statusText)
     })) as AxiosResponse<HistsNewsExternal>;
 
     result && result?.data && result?.data?.hits.map(async (item: NewsExternal) => {
@@ -75,11 +75,11 @@ export class NewsService  {
     });
   }
 
-  async remove(id: string) {
-    await this.newsItemModel.updateOne(
+  async remove(id: string): Promise<boolean> {
+    const result = await this.newsItemModel.updateOne(
       { _id: id },
       { status: NewsItemStatusEnum.DISABLED },
     );
-    return;
+    return result ? true : false
   }
 }

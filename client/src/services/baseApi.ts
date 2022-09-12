@@ -1,10 +1,7 @@
+import { ErrorResponse } from "../infrastructure/viewModels/shared";
+
 type MethodsRequest = "POST" | "PUT" | "GET" | "DELETE";
 
-export interface ErrorResponse {
-  code: string;
-  message: string;
-  detailMessage?: string;
-}
 
 function baseFetch(url: RequestInfo, options?: RequestInit) {
   const defaultHeaders = {
@@ -33,45 +30,45 @@ export function serializeJSON(data: any): string {
     .join("&");
 }
 
-function executeRequest(
+function executeRequest<T, R = null>(
   method: MethodsRequest,
   pathname: string,
-  data: any,
+  data: T,
   options = {}
 ) {
   const body = method === "GET" || !data ? {} : JSON.stringify(data);
   const reqObj =
     method === "GET" ? { method, ...options } : { method, ...options, body };
-  return new Promise<any>((resolve, reject) => {
+  return new Promise<R>((resolve, reject) => {
     return baseFetch(pathname, reqObj as any)
       .then((res) => {
-        res.json().then(r => resolve(r)).catch(e => console.log('Error on server response: ',e));
+        res.json().then(r => resolve(r)).catch(e => console.log('Error on server response: ', e));
       })
       .catch((err) => {
         const errorResponse = getBaseErrorResponse(
           err && err.body && err.body.code, // Validate if this works
           err
-        ); 
+        );
         reject(errorResponse);
       });
   });
 }
 
 export default {
-  get(pathname: string, data: any = {}, options: RequestInit) {
-    return executeRequest(
+  get<T,R>(pathname: string, data = {}, options: RequestInit) {
+    return executeRequest<null,R>(
       "GET",
       pathname + "?" + serializeJSON(data),
       null,
       options
     );
   },
-  post(pathname: string, data: any, options: RequestInit) {
-    return executeRequest("POST", pathname, data, options);
+  post<T, R>(pathname: string, data: T, options: RequestInit) {
+    return executeRequest<T, R>("POST", pathname, data, options);
   },
 
-  put(pathname: string, data: any, options: RequestInit) {
-    return executeRequest("PUT", pathname, data, options);
+  put<T,R>(pathname: string, data: any, options: RequestInit) {
+    return executeRequest<T,R>("PUT", pathname, data, options);
   },
 
   delete(pathname: string, data: any, options: RequestInit) {
@@ -82,13 +79,10 @@ export default {
 export function getBaseErrorResponse(
   code: string,
   message: string,
-  detailMessage?: string
 ): ErrorResponse {
   return {
-    code,
+    statusCode: code,
     message,
-    detailMessage,
   };
 }
 
- 
