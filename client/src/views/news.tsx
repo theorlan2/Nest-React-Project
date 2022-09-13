@@ -11,6 +11,8 @@ import { IRootState } from "../store/createReducers";
 import { initData, removeItem } from "../store/post/actions";
 import { RequestStatusEnum } from "../infrastructure/enums/generics";
 import { getNews } from '../infrastructure/repositories/news.repository';
+import Loading from "../components/layout/Spinner";
+import HeaderTop from "../components/layout/header/Header";
 
 interface StateProps {
   posts?: any;
@@ -55,20 +57,15 @@ const NewsView: FunctionComponent<Props> = (props) => {
 
   return (
     <main className="main" >
-      <div className="cover-news">
-        <Container>
-          <h2>HN Feed</h2>
-          <h3>We {'<3'} Hacker news!</h3>
-        </Container>
-      </div>
+       <HeaderTop />
       <Container>
         <div className="cont-list-news">
           {Array.isArray(data?.data)
             && data?.data.map((item: any, indexItem) => !isValidTitle(item.title)
               && <ListElementNew key={indexItem + '-list-element-new'} title={item.title} time={showDate(item.created_at)} author={item.author} id={item._id} url="aa" onRemove={(id: string) => props.removeNewsItem(id)} />)}
 
-          {isLoading && <div className="cont-loading" >
-            <p>Loading data....</p></div>}
+          {<div className="cont-loading" >
+          <Loading/></div>}
 
           {Array.isArray(data?.data)
             && !data?.data.length && <div className="cont-loading" >
