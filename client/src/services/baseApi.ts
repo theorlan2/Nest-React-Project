@@ -71,8 +71,8 @@ export default {
     return executeRequest<T,R>("PUT", pathname, data, options);
   },
 
-  delete(pathname: string, data: any, options: RequestInit) {
-    return executeRequest("DELETE", pathname, data, options);
+  delete<T,R>(pathname: string, data: any, options: RequestInit) {
+    return executeRequest<T,R>("DELETE", pathname, data, options);
   },
 };
 
