@@ -3,7 +3,7 @@ import { ErrorResponse } from "../infrastructure/viewModels/shared";
 type MethodsRequest = "POST" | "PUT" | "GET" | "DELETE";
 
 
-function baseFetch(url: RequestInfo, options?: RequestInit) {
+function baseFetch(url: RequestInfo, options: RequestInit = {}) {
   const defaultHeaders = {
     "Content-Type": "application/json",
     //Authorization: "Bearer " + "token", // TODO: GET Token from Storage is use JWT
@@ -55,7 +55,7 @@ function executeRequest<T, R = null>(
 }
 
 export default {
-  get<T,R>(pathname: string, data = {}, options: RequestInit) {
+  get<T,R>(pathname: string, data = {}, options?: RequestInit) {
     return executeRequest<null,R>(
       "GET",
       pathname + "?" + serializeJSON(data),
@@ -63,15 +63,15 @@ export default {
       options
     );
   },
-  post<T, R>(pathname: string, data: T, options: RequestInit) {
+  post<T, R>(pathname: string, data: T, options?: RequestInit) {
     return executeRequest<T, R>("POST", pathname, data, options);
   },
 
-  put<T,R>(pathname: string, data: any, options: RequestInit) {
+  put<T,R>(pathname: string, data: T, options?: RequestInit) {
     return executeRequest<T,R>("PUT", pathname, data, options);
   },
 
-  delete<T,R>(pathname: string, data: any, options: RequestInit) {
+  delete<T,R>(pathname: string, data: T, options?: RequestInit) {
     return executeRequest<T,R>("DELETE", pathname, data, options);
   },
 };

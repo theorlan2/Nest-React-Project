@@ -1,20 +1,18 @@
-import { FunctionComponent, ReactNode, useEffect } from "react";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from 'redux'
-import dayjs from "dayjs";
-import isYesterday from 'dayjs/plugin/isYesterday';
-import { useQuery } from "@tanstack/react-query";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 //
 import Container from '../components/layout/Container';
 import ListElementNew from "../components/news/ListElementNew";
 import { IRootState } from "../store/createReducers";
 import { initData, removeItem } from "../store/post/actions";
-import { RequestStatusEnum } from "../infrastructure/enums/generics";
-import { getNews } from '../infrastructure/repositories/news.repository';
+import { deletePost, getPost } from '../infrastructure/repositories/news.repository';
+import { formatDateIsYesterday } from "../infrastructure/utils/dateUtils";
 
 interface StateProps {
   posts?: any;
-  postsStatus?: RequestStatusEnum;
 }
 interface DispatchProps {
   initNewsData: () => void;
@@ -27,27 +25,30 @@ interface OwnProps {
 type Props = StateProps & DispatchProps & OwnProps;
 
 const NewsView: FunctionComponent<Props> = (props) => {
+  const [idPost, setIdPost] = useState("");
+  const { data, isLoading, isError } = useQuery(['news'], getPost);
+  const { isLoading: isDeletingPost, mutate: deleteThePost } = useMutation(
+    () => deletePost(idPost),
+    {
+      onSuccess: (res) => {
+        setIdPost("");
+        console.log('onSuccess')
+        
+      },
+      onError: (err) => {
+        setIdPost("");
+        console.log('onError')
 
-  const { data, isLoading, error } = useQuery(['news'], getNews)
+      },
+    }
+  );
+
 
   useEffect(() => {
-
-  }, [])
-
-
-  function showDate(time: string): string {
-    let result = '';
-    dayjs.extend(isYesterday);
-    const isAfterToday = dayjs().isAfter(time, 'day');
-    const _isYesterday = dayjs(time).isYesterday();
-
-    if (_isYesterday) {
-      result = 'Yesterday';
-    } else {
-      result = dayjs(time).format(isAfterToday ? 'DD MMMM' : 'hh:mm a')
+    if (idPost != "") {
+      deleteThePost();
     }
-    return result;
-  }
+  }, [idPost]);
 
   function isValidTitle(str?: string): boolean {
     return str === '' || str === undefined;
@@ -65,7 +66,7 @@ const NewsView: FunctionComponent<Props> = (props) => {
         <div className="cont-list-news">
           {Array.isArray(data?.data)
             && data?.data.map((item: any, indexItem) => !isValidTitle(item.title)
-              && <ListElementNew key={indexItem + '-list-element-new'} title={item.title} time={showDate(item.created_at)} author={item.author} id={item._id} url="aa" onRemove={(id: string) => props.removeNewsItem(id)} />)}
+              && <ListElementNew key={indexItem + '-list-element-new'} title={item.title} time={formatDateIsYesterday(item.created_at)} author={item.author} id={item._id} url="aa" onRemove={(id: string) => { setIdPost(id); }} />)}
 
           {isLoading && <div className="cont-loading" >
             <p>Loading data....</p></div>}
@@ -75,7 +76,7 @@ const NewsView: FunctionComponent<Props> = (props) => {
               <p>There is no data on the server yet....</p>
             </div>}
 
-          {error && <div className="cont-error" >
+          {isError && <div className="cont-error" >
             <p>An error has occurred on the server....</p></div>}
 
         </div>
@@ -88,7 +89,6 @@ const NewsView: FunctionComponent<Props> = (props) => {
 
 const mapStateToProps = (state: IRootState) => ({
   posts: state.posts.posts,
-  postsStatus: state.posts.postsStatus,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

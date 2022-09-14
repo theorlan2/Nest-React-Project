@@ -2,6 +2,7 @@
 The Full Stack project contains:
 
 * ReactJs Client (Typescript)
+  * React-Query
 * NestJs Server
 * MongoDB
 * Docker Compose
