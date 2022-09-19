@@ -22,6 +22,8 @@ Go to http://localhost:8081
 
 The mongo database has no password or user assigned, it is with the default account.
  
+#### Note:
+If you don't have docker, you can run Server and Client separately in your terminal(CMD on windows).
  
 ### Data
 
