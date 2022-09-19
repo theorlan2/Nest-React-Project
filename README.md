@@ -18,7 +18,7 @@ To run the project in docker
 $ docker-compose up dev
 ```
 
-Go to http://localhost:8080
+Go to http://localhost:8081
 
 The mongo database has no password or user assigned, it is with the default account.
  
