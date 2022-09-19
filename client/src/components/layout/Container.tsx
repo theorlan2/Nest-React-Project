@@ -6,7 +6,6 @@ interface Props {
 
 const Container: FunctionComponent = (props: Props) => {
 
-
     return (
         <div className="container" >
             {props.children}

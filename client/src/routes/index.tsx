@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route,  Switch } from "react-router-dom";
-import News from '../views/news';
+import News from '../pages/news/news';
  
 function App() {
 

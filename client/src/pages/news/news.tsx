@@ -4,12 +4,12 @@ import { Dispatch } from 'redux'
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 //
-import Container from '../components/layout/Container';
-import ListElementNew from "../components/news/ListElementNew";
-import { IRootState } from "../store/createReducers";
-import { initData, removeItem } from "../store/post/actions";
-import { deletePost, getPost } from '../infrastructure/repositories/news.repository';
-import { formatDateIsYesterday } from "../infrastructure/utils/dateUtils";
+import Container from '../../components/layout/Container';
+import ListElementNew from "../../components/news/ListElementNew";
+import { IRootState } from "../../store/createReducers";
+import { initData, removeItem } from "../../store/post/actions";
+import { deletePost, getPost } from '../../infrastructure/repositories/news.repository';
+import { formatDateIsYesterday } from "../../infrastructure/utils/dateUtils";
 
 interface StateProps {
   posts?: any;
@@ -32,13 +32,10 @@ const NewsView: FunctionComponent<Props> = (props) => {
     {
       onSuccess: (res) => {
         setIdPost("");
-        console.log('onSuccess')
         
       },
       onError: (err) => {
         setIdPost("");
-        console.log('onError')
-
       },
     }
   );
