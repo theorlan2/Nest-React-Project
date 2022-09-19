@@ -31,15 +31,15 @@ export class NewsService {
     return createManyNews;
   }
 
-  findAll() {
+  findAll(): Promise<NewsItem[]> {
     return this.newsItemModel
       .find({ status: NewsItemStatusEnum.ENABLE })
       .sort({ created_at: -1 })
       .exec();
   }
 
-  findOne(id: string) {
-    const findNews = this.newsItemModel.findById(id);
+  async findOne(id: string): Promise<NewsItem> {
+    const findNews = await this.newsItemModel.findById(id);
     return findNews;
   }
 
