@@ -5,6 +5,5 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/client/package.json
 RUN npm install --only=development
 COPY . /app/client
-RUN npm run build
 
-CMD ["npm", "start"]
+CMD ["npm","run","start"]
